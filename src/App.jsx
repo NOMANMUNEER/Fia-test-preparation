@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 // اپنا رینڈر یو آر ایل یہاں ڈالیں
-const API_URL = "project-production-7d46.up.railway.app/api";
+const API_URL = "https://project-production-7d46.up.railway.app/api";
 
 function App() {
   const [view, setView] = useState('home'); // home, quiz, result
