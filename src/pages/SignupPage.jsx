@@ -19,8 +19,13 @@ const SignupPage = () => {
             await signup(name, email, password);
             navigate('/');
         } catch (err) {
-            //setError(err.response?.data?.message || 'Signup failed. Please try again.');
-             setError(err.response?.data?.message);
+           // setError(err.response?.data?.message || 'Signup failed. Please try again.');
+           // Console mobile par nahi dikhta, isliye alert use karein
+        const errorMsg = err.response?.data?.message || err.message || 'Signup failed';
+        setError(errorMsg);
+        alert("Mobile Error: " + errorMsg); // Ye line add karein
+        console.log(err);
+            
         }
         setLoading(false);
     };
