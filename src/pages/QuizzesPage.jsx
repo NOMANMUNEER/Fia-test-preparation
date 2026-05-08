@@ -4,7 +4,7 @@ import axios from 'axios';
 import QuizCard from '../components/QuizCard';
 import { useAuth } from '../context/AuthContext';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://project-production-7d46.up.railway.app/api';
 
 const QuizzesPage = () => {
     const { categoryId } = useParams();
