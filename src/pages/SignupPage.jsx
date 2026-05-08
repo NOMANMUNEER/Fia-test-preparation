@@ -19,7 +19,8 @@ const SignupPage = () => {
             await signup(name, email, password);
             navigate('/');
         } catch (err) {
-            setError(err.response?.data?.message || 'Signup failed. Please try again.');
+            //setError(err.response?.data?.message || 'Signup failed. Please try again.');
+             setError(err.response?.data?.message);
         }
         setLoading(false);
     };
