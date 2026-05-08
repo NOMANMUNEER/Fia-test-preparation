@@ -627,8 +627,13 @@ a:hover {
 }
 
 /* ==========================================
-   QUIZ SESSION
+   QUIZ SESSION — MOBILE FIRST
    ========================================== */
+.quiz-page-mobile {
+    padding: 16px 12px;
+    padding-bottom: 100px;
+}
+
 .quiz-session {
     max-width: 700px;
     margin: 0 auto;
@@ -636,10 +641,10 @@ a:hover {
 
 .progress-bar-container {
     width: 100%;
-    height: 5px;
+    height: 6px;
     background: var(--border-color);
     border-radius: 10px;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     overflow: hidden;
 }
 
@@ -647,63 +652,84 @@ a:hover {
     height: 100%;
     background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
     border-radius: 10px;
-    transition: width 0.4s ease;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .quiz-session-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 0 2px;
 }
 
 .q-counter {
     color: var(--text-secondary);
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .q-score {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     color: var(--accent-gold);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 700;
+    background: rgba(255, 215, 0, 0.08);
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+.q-score-icon {
+    font-size: 0.85rem;
 }
 
 .quiz-session-card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    padding: 32px 28px;
+    padding: 24px 18px;
+    backdrop-filter: blur(10px);
 }
 
 .question-text {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 600;
-    line-height: 1.6;
-    margin-bottom: 28px;
+    line-height: 1.65;
+    margin-bottom: 24px;
     color: var(--text-primary);
 }
 
 .options-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
 .option-btn {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     width: 100%;
     text-align: left;
-    padding: 16px 20px;
+    padding: 14px 16px;
     background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--border-color);
+    border: 1.5px solid var(--border-color);
     border-radius: var(--radius-md);
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: 'Inter', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.option-selectable:active {
+    transform: scale(0.98);
+    background: rgba(102, 126, 234, 0.12);
 }
 
 .option-btn:hover:not(:disabled) {
@@ -715,24 +741,44 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.06);
     font-weight: 700;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     color: var(--text-secondary);
     flex-shrink: 0;
+    transition: all 0.25s;
 }
 
 .option-text {
     flex: 1;
-    line-height: 1.4;
+    line-height: 1.45;
+}
+
+.option-icon {
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 .option-correct {
     border-color: var(--success) !important;
-    background: rgba(34, 197, 94, 0.12) !important;
+    background: rgba(34, 197, 94, 0.1) !important;
+    animation: correctPulse 0.4s ease-out;
+}
+
+@keyframes correctPulse {
+    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+    100% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
 }
 
 .option-correct .option-letter {
@@ -742,7 +788,16 @@ a:hover {
 
 .option-wrong {
     border-color: var(--danger) !important;
-    background: rgba(239, 68, 68, 0.12) !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+    animation: wrongShake 0.4s ease-out;
+}
+
+@keyframes wrongShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-5px); }
+    40% { transform: translateX(5px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(3px); }
 }
 
 .option-wrong .option-letter {
@@ -751,7 +806,89 @@ a:hover {
 }
 
 .option-disabled {
-    opacity: 0.4;
+    opacity: 0.35;
+}
+
+/* Feedback Banner */
+.feedback-banner {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-radius: var(--radius-md);
+    animation: slideUp 0.35s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.feedback-correct {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.feedback-wrong {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.feedback-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.feedback-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.feedback-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.feedback-text strong {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.feedback-answer {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+/* Next / Finish Button */
+.btn-next-question {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: slideUp 0.35s ease-out;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    letter-spacing: 0.3px;
+}
+
+.btn-next-question:hover {
+    opacity: 0.92;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+}
+
+.btn-next-question:active {
+    transform: scale(0.98);
 }
 
 /* ==========================================
@@ -909,6 +1046,33 @@ a:hover {
 /* ==========================================
    RESPONSIVE
    ========================================== */
+
+/* Tablet and up */
+@media (min-width: 641px) {
+    .quiz-page-mobile {
+        padding: 32px 24px;
+    }
+
+    .quiz-session-card {
+        padding: 32px 28px;
+    }
+
+    .question-text {
+        font-size: 1.15rem;
+    }
+
+    .option-btn {
+        padding: 16px 20px;
+    }
+
+    .btn-next-question {
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* Mobile */
 @media (max-width: 640px) {
     .page-title {
         font-size: 1.6rem;
@@ -949,5 +1113,95 @@ a:hover {
     .auth-card {
         margin: 0 16px;
         padding: 32px 24px;
+    }
+
+    /* Quiz session mobile enhancements */
+    .quiz-page-mobile {
+        padding: 12px 10px;
+        padding-bottom: 32px;
+    }
+
+    .progress-bar-container {
+        height: 5px;
+        margin-bottom: 12px;
+    }
+
+    .quiz-session-header {
+        margin-bottom: 12px;
+    }
+
+    .q-counter {
+        font-size: 0.8rem;
+    }
+
+    .q-score {
+        font-size: 0.82rem;
+        padding: 4px 10px;
+    }
+
+    .quiz-session-card {
+        padding: 18px 14px;
+        border-radius: var(--radius-md);
+    }
+
+    .question-text {
+        font-size: 0.98rem;
+        margin-bottom: 18px;
+        line-height: 1.6;
+    }
+
+    .options-list {
+        gap: 8px;
+    }
+
+    .option-btn {
+        padding: 13px 14px;
+        gap: 10px;
+        font-size: 0.88rem;
+        border-radius: 10px;
+    }
+
+    .option-letter {
+        width: 30px;
+        height: 30px;
+        font-size: 0.78rem;
+    }
+
+    .feedback-banner {
+        margin-top: 12px;
+        padding: 12px 14px;
+    }
+
+    .feedback-icon {
+        font-size: 1.3rem;
+    }
+
+    .feedback-text strong {
+        font-size: 0.88rem;
+    }
+
+    .feedback-answer {
+        font-size: 0.78rem;
+    }
+
+    .btn-next-question {
+        margin-top: 14px;
+        padding: 15px 20px;
+        font-size: 0.95rem;
+        border-radius: 10px;
+    }
+
+    .result-card {
+        margin: 20px auto 0;
+        padding: 36px 20px;
+    }
+
+    .result-circle {
+        width: 110px;
+        height: 110px;
+    }
+
+    .result-percentage {
+        font-size: 2rem;
     }
 }

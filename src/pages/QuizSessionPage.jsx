@@ -17,6 +17,7 @@ const QuizSessionPage = () => {
     const [showFeedback, setShowFeedback] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [isLastQuestion, setIsLastQuestion] = useState(false);
 
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -41,7 +42,7 @@ const QuizSessionPage = () => {
 
     const handleAnswer = (option) => {
         if (showFeedback) return; // Prevent double-click
-        
+
         setSelectedAnswer(option);
         setShowFeedback(true);
 
@@ -50,17 +51,23 @@ const QuizSessionPage = () => {
             setScore(prev => prev + 1);
         }
 
-        // Auto-advance after 800ms
-        setTimeout(() => {
-            if (currentIdx + 1 < questions.length) {
-                setCurrentIdx(prev => prev + 1);
-                setSelectedAnswer(null);
-                setShowFeedback(false);
-            } else {
-                // Quiz finished — submit and navigate to results
-                submitAndNavigate(isCorrect ? score + 1 : score);
-            }
-        }, 800);
+        // Check if this is the last question
+        setIsLastQuestion(currentIdx + 1 >= questions.length);
+    };
+
+    const handleNext = () => {
+        if (isLastQuestion) {
+            // Quiz finished — calculate final score and submit
+            const finalScore = selectedAnswer === questions[currentIdx].correctAnswer
+                ? score // already incremented in handleAnswer
+                : score;
+            submitAndNavigate(finalScore);
+        } else {
+            setCurrentIdx(prev => prev + 1);
+            setSelectedAnswer(null);
+            setShowFeedback(false);
+            setIsLastQuestion(false);
+        }
     };
 
     const submitAndNavigate = async (finalScore) => {
@@ -124,9 +131,10 @@ const QuizSessionPage = () => {
 
     const currentQ = questions[currentIdx];
     const progress = ((currentIdx + 1) / questions.length) * 100;
+    const isCorrect = selectedAnswer === currentQ.correctAnswer;
 
     return (
-        <div className="page-container">
+        <div className="page-container quiz-page-mobile">
             <div className="quiz-session">
                 {/* Progress Bar */}
                 <div className="progress-bar-container">
@@ -137,7 +145,9 @@ const QuizSessionPage = () => {
                     <span className="q-counter">
                         Question {currentIdx + 1} of {questions.length}
                     </span>
-                    <span className="q-score">Score: {score}</span>
+                    <span className="q-score">
+                        <span className="q-score-icon">⭐</span> {score}/{questions.length}
+                    </span>
                 </div>
 
                 <div className="quiz-session-card">
@@ -155,6 +165,9 @@ const QuizSessionPage = () => {
                                     optClass += ' option-disabled';
                                 }
                             }
+                            if (!showFeedback && selectedAnswer === null) {
+                                optClass += ' option-selectable';
+                            }
 
                             return (
                                 <button
@@ -162,16 +175,55 @@ const QuizSessionPage = () => {
                                     onClick={() => handleAnswer(opt)}
                                     className={optClass}
                                     disabled={showFeedback}
+                                    id={`option-${i}`}
                                 >
                                     <span className="option-letter">
                                         {String.fromCharCode(65 + i)}
                                     </span>
                                     <span className="option-text">{opt}</span>
+                                    {showFeedback && opt === currentQ.correctAnswer && (
+                                        <span className="option-icon">✓</span>
+                                    )}
+                                    {showFeedback && opt === selectedAnswer && opt !== currentQ.correctAnswer && (
+                                        <span className="option-icon">✗</span>
+                                    )}
                                 </button>
                             );
                         })}
                     </div>
+
+                    {/* Feedback Banner */}
+                    {showFeedback && (
+                        <div className={`feedback-banner ${isCorrect ? 'feedback-correct' : 'feedback-wrong'}`}>
+                            <div className="feedback-content">
+                                <span className="feedback-icon">
+                                    {isCorrect ? '🎉' : '❌'}
+                                </span>
+                                <div className="feedback-text">
+                                    <strong>
+                                        {isCorrect ? 'Correct!' : 'Incorrect!'}
+                                    </strong>
+                                    {!isCorrect && (
+                                        <span className="feedback-answer">
+                                            Answer: {currentQ.correctAnswer}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
+
+                {/* Next / Finish Button */}
+                {showFeedback && (
+                    <button
+                        onClick={handleNext}
+                        className="btn-next-question"
+                        id="btn-next-question"
+                    >
+                        {isLastQuestion ? 'View Results 🏆' : 'Next Question →'}
+                    </button>
+                )}
             </div>
         </div>
     );
